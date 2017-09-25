@@ -1,1 +1,1 @@
-# dojo-week6
+# Dojo Class Assignments: Week 6
