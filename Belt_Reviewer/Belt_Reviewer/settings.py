@@ -54,7 +54,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Belt_Reviewer.urls'
 
-AUTHENTICATION_BACKENDS = ['apps.accounts.backends.EmailAuthBackend',]
+AUTHENTICATION_BACKENDS = ['apps.accounts.backends.EmailAuthBackend', ]
 
 TEMPLATES = [
     {
@@ -76,7 +76,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Belt_Reviewer.wsgi.application'
 
 FILES_DIR = os.path.abspath(os.path.join(BASE_DIR, '../Belt_Reviewer/templates'))
-
 
 
 # Database

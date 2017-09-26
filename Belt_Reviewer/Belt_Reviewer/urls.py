@@ -25,6 +25,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('apps.accounts.urls'), name='accounts'),
     url(r'^reviews/', include('apps.reviews.urls'), name='reviews'),
-    url(r'^accounts/login/', login_view, name='login'),
-    url(r'^$', RedirectView.as_view(url='/accounts/', permanent=True)),
+    # url(r'^accounts/login/', login_view, name='login'),
+    # url(r'^$', RedirectView.as_view(url='/accounts/', permanent=False)),
 ]
