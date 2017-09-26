@@ -7,14 +7,17 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 User = get_user_model()
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.EmailField(label='Email address',
+        widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    # email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+        widget=forms.PasswordInput(render_value=False, attrs={'class': 'form-control'}))
 
     def clean(self, *args, **kwargs):
         username = self.cleaned_data.get('username')
+        # email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
+        print(self.cleaned_data)
 
         if username and password:
             user = authenticate(username=username, password=password)
@@ -34,9 +37,9 @@ class UserRegisterForm(forms.ModelForm):
     email = forms.EmailField(label='Email address', required=True, widget=forms.EmailInput(
         attrs={'class': 'form-control'}))
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+        widget=forms.PasswordInput(render_value=False, attrs={'class': 'form-control'}))
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+        widget=forms.PasswordInput(render_value=False, attrs={'class': 'form-control'}))
 
     class Meta:
         model = User

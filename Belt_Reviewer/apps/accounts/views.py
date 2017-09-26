@@ -12,7 +12,9 @@ def index(request):
     title = 'Login/Registration'
     login_form = UserLoginForm(request.POST or None)
     if login_form.is_valid():
+        # email = login_form.cleaned_data.get('email')
         username = login_form.cleaned_data.get('username')
+        # email = login_form.cleaned_data.get('email')
         password = login_form.cleaned_data.get('password')
         return_user = authenticate(username=username, password=password)
         login(request, return_user)

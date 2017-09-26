@@ -54,6 +54,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Belt_Reviewer.urls'
 
+AUTHENTICATION_BACKENDS = ['apps.accounts.backends.EmailAuthBackend',]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
