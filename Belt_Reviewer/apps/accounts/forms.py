@@ -32,7 +32,9 @@ class UserLoginForm(forms.Form):
         
 
 class UserRegisterForm(forms.ModelForm):
-    username = forms.CharField(
+    name = forms.CharField(label='Name', max_length=100, widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    username = forms.CharField(label='Alias', 
         widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(label='Email address', required=True, widget=forms.EmailInput(
         attrs={'class': 'form-control'}))
@@ -44,6 +46,7 @@ class UserRegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
+            'name',
             'username',
             'email',
             'password',
@@ -58,7 +61,7 @@ class UserRegisterForm(forms.ModelForm):
             raise forms.ValidationError('This email already exists.')
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
-        print(password, confirm_password)
+        # print(password, confirm_password)
         if password != confirm_password:
             raise forms.ValidationError('Passwords must match.')
         return super(UserRegisterForm, self).clean(*args, **kwargs)
