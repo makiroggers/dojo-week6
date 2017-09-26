@@ -88,7 +88,7 @@ class Book(models.Model):
         """
         Creates a string for the genre, required to display in admin.
         """
-        return ', '.join( [genre.name for genre in self.genre.all()[:3]] )
+        return ', '.join([genre.name for genre in self.genre.all()[:3]])
     display_genre.short_description = 'Genre'
 
 
@@ -140,3 +140,6 @@ class Author(models.Model):
         String for representing the Model object.
         """
         return '%s, %s' % (self.last_name, self.first_name)
+
+    class Meta:
+        ordering = ['last_name']
