@@ -4,4 +4,4 @@ $(document).ready(function() {
     document.getElementById("register-form").reset();
 });
 
-console.log("i'm here!")
+console.log("i'm here!");

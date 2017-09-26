@@ -5,7 +5,7 @@
 
 {% block menu_item %}
 {% if user.is_authenticated %}
-    <li><a href=""><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+    <li><a href="{% url 'update_profile' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
     <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 {% else %}
     <li><a href="{% url 'accounts_index' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -19,7 +19,7 @@
     {% else %}
     <div class="col-sm-5 register">
         <h1>Register</h1>
-        <form method="POST" id="register-form" action="" class="form-horizontal" enctype="multipart/form-data">
+        <form method="POST" id="register-form" action="{% url 'register' %}" class="form-horizontal" enctype="multipart/form-data">
             {% csrf_token %}
             {{ registration_form.as_p }}
         <input type="submit" class="btn btn-default" value="Register">
@@ -29,7 +29,7 @@
 
     <div class="col-sm-5 login">
         <h1>Login</h1>
-        <form method="POST" id="login-form" action="" class="form-horizontal" enctype="multipart/form-data">
+        <form method="POST" id="login-form" action="{% url 'login' %}" class="form-horizontal" enctype="multipart/form-data">
             {% csrf_token %} 
             {{ login_form.as_p }}
             <input type="submit" class="btn btn-default" value="Login">
