@@ -57,7 +57,8 @@ ROOT_URLCONF = 'Belt_Reviewer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(os.path.dirname(__file__), '../Belt_Reviewer/')],
+        'DIRS': [os.path.join(os.path.dirname(__file__), '../Belt_Reviewer/'),
+                 os.path.join(os.path.dirname(__file__), '../apps/accounts/templates/accounts/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

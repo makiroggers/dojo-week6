@@ -19,9 +19,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import RedirectView
 
+from apps.accounts.views import index, login_view, register_view, logout_view
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('apps.accounts.urls'), name='accounts'),
     url(r'^reviews/', include('apps.reviews.urls'), name='reviews'),
+    url(r'^accounts/login/', login_view, name='login'),
     url(r'^$', RedirectView.as_view(url='/accounts/', permanent=True)),
 ]
