@@ -8,7 +8,3 @@ from pagedown.widgets import PagedownWidget
 from .models import Post
 
 # Blog post model
-
-
-class ReviewForm(forms.ModelForm):
-    review = char

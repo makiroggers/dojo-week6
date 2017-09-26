@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-
-"""
+from django.contrib.auth.models import User
 from django.db import models
-import re
-import bcrypt
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
-class UserManager(models.Manager)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
+    name = models.CharField(max_length=100, blank=True)
+    username = models.CharField(max_length=45)
+    email = models.EmailField(max_length=100)
+    count_reviews = models.IntegerField(blank=True, null=True, default='0')
+    AUTH_PROFILE_MODULE = 'app.UserProfile'
 
-class User(models.Model):
-    name = models.CharField(max_length=100)
-    alias = models.CharField(max_Length=100)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
-    objects = UserManager()
 
-    def __str__(self):
-        return self.email
-"""
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()

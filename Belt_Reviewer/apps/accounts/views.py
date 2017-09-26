@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.shortcuts import HttpResponse, redirect, render
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.shortcuts import HttpResponse, Http404, redirect, render, reverse
 from .forms import *
+from .models import *
 
 
 def index(request):
@@ -10,19 +14,22 @@ def index(request):
     Renders registration and login forms @ /accounts/index
     """
     title = 'Login/Registration'
-    login_form = UserLoginForm(request.POST or None)
-    if login_form.is_valid():
-        # email = login_form.cleaned_data.get('email')
-        username = login_form.cleaned_data.get('username')
-        # email = login_form.cleaned_data.get('email')
-        password = login_form.cleaned_data.get('password')
-        return_user = authenticate(username=username, password=password)
-        login(request, return_user)
-        print(request.user.is_authenticated())
-        return redirect('/')
+    login_form = UserLoginForm()
+    registration_form = UserRegisterForm()
+    context = {'login_form': login_form,
+               'registration_form': registration_form,
+               'title': 'title', }
+    return render(request, 'form.html', context=context)
 
+
+def register_view(request):
+    """
+    Process post data to register a new account @ /accounts/users/new
+    Registration includes fields: name, alias, email, 8-char password, password confirmation
+    """
+    title = 'Login/Registration'
+    login_form = UserLoginForm()
     registration_form = UserRegisterForm(request.POST or None)
-    print(request.user.is_authenticated())
     if registration_form.is_valid():
         user = registration_form.save(commit=False)
         password = registration_form.cleaned_data.get('password')
@@ -30,43 +37,71 @@ def index(request):
         user.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
-        return redirect('/')
-
-    context = { 'login_form': login_form,
-                'registration_form': registration_form, 
-                'title': title, }
-
+        return redirect('accounts_index')
+    context = {'login_form': login_form,
+               'registration_form': registration_form,
+               'title': 'title', }
     return render(request, 'form.html', context=context)
 
-def register_view(request):
-    """
-    Process post data to register a new account @ /accounts/users/new
-
-    Registration includes fields: name, alias, email, 8-char password, password confirmation
-    """
-    pass
-    # return render(request, 'form.html', {})
 
 def login_view(request):
     """
     Process user login @ /accounts/users/login
-
     Login includes fields: Email, password
     """
-    pass
-    # return render(request, 'form.html', {})
+    title = 'Login/Registration'
+    registration_form = UserRegisterForm()
+    login_form = UserLoginForm(request.POST or None)
+    if login_form.is_valid():
+        username = login_form.cleaned_data.get('username')
+        password = login_form.cleaned_data.get('password')
+        return_user = authenticate(username=username, password=password)
+        login(request, return_user)
+        return redirect('accounts_index')
+    context = {'login_form': login_form,
+               'registration_form': registration_form,
+               'title': title, }
+    return render(request, 'form.html', context=context)
+
 
 def logout_view(request):
     """
     Process user logout, redirects to login/reg page @ accounts/users/logout
     """
     logout(request)
-    return redirect('/')
+    return redirect('accounts_index')
 
-def user_profile(request):
+
+def profile_view(request, pk):
     """
     Render logged in user profile at /accounts/users/<id>
-
     Profile includes: Alias, name, email, total reviews, and list of reviews
     """
-    pass
+    try:
+        user_id = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        raise Http404("User does not exist.")
+    return render(request, 'user_profile.html', {'user': user_id})
+
+
+@login_required
+@transaction.atomic
+def profile_update(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, (
+                'Your profile was successfully updated!'))
+            return redirect('update_profile')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.userprofile)
+    return render(request, 'user_edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })

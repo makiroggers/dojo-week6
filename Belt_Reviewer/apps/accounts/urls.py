@@ -5,8 +5,10 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='accounts_index'),
-    # url(r'^login$', views.login, name='login'),
-    url(r'^logout$', views.logout_view, name='logout'),
-    # url(r'^register$', views.register, name='register'),
+    url(r'^users/login$', views.login_view, name='login'),
+    url(r'^users/logout$', views.logout_view, name='logout'),
+    url(r'^users/new$', views.register_view, name='register'),
+    url(r'^users/profile/(?P<pk>\d+)$', views.profile_view, name='profile'),
+    url(r'^users/edit$', views.profile_update, name='update_profile'),
     # url(r'^success$', views.success, name='success'),
 ]
