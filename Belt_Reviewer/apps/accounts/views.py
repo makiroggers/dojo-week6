@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.shortcuts import HttpResponse, Http404, redirect, render, reverse
+from django.shortcuts import Http404, redirect, render, reverse
 from .forms import *
 from .models import *
 
@@ -53,10 +53,13 @@ def login_view(request):
     registration_form = UserRegisterForm()
     login_form = UserLoginForm(request.POST or None)
     if login_form.is_valid():
-        username = login_form.cleaned_data.get('username')
-        password = login_form.cleaned_data.get('password')
-        return_user = authenticate(username=username, password=password)
-        login(request, return_user)
+        try:
+            username = login_form.cleaned_data.get('username')
+            password = login_form.cleaned_data.get('password')
+            return_user = authenticate(username=username, password=password)
+            login(request, return_user)
+        except:
+            raise Http404("This user does not exist.")
         return redirect('accounts_index')
     context = {'login_form': login_form,
                'registration_form': registration_form,

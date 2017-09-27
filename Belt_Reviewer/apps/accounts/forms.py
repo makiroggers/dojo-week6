@@ -13,9 +13,8 @@ class UserLoginForm(forms.Form):
 
     def clean(self, *args, **kwargs):
         username = self.cleaned_data.get('username')
-        # email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
-        print(self.cleaned_data)
+        # print(self.cleaned_data)
 
         if username and password:
             user = authenticate(username=username, password=password)
@@ -51,14 +50,13 @@ class UserRegisterForm(forms.ModelForm):
         ]
 
     def clean(self, *args, **kwargs):
-        print(self.cleaned_data)
+        # print(self.cleaned_data)
         email = self.cleaned_data.get('email')
         registration_email = User.objects.filter(email=email)
         if registration_email.exists():
             raise forms.ValidationError('This email already exists.')
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
-        # print(password, confirm_password)
         if password != confirm_password:
             raise forms.ValidationError('Passwords must match.')
         return super(UserRegisterForm, self).clean(*args, **kwargs)
@@ -66,13 +64,13 @@ class UserRegisterForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(label='Alias', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = User
         fields = [
             'username',
-            # 'email',
+            'email',
         ]
 
 
