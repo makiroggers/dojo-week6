@@ -5,8 +5,10 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import Http404, redirect, render, reverse
+from django_tables2 import RequestConfig
 from .forms import *
 from .models import *
+from .tables import *
 
 
 def index(request):
@@ -108,3 +110,12 @@ def profile_update(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+def profile_list(request):
+    '''
+    queryset = UserProfile.objects.all()
+    table = SimpleTable(queryset)
+    '''
+    table = UserProfileTable(UserProfile.objects.all())
+    RequestConfig(request).configure(table)
+    return render(request, 'user_list.html', {'table': table})
