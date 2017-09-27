@@ -1,7 +1,7 @@
 {% extends 'templates/base.html' %} 
 {% load static %}
 
-{% block title %}<title>{{ user.name }}'s Profile</title>{% endblock %}
+{% block title %}<title>{{ user_profile.name }}'s Profile</title>{% endblock %}
 
 {% block menu_item %}
 {% if user.is_authenticated %}
@@ -19,11 +19,12 @@
 {% block content %}
 <div class="col-sm-10 profile">
 {% if user.is_authenticated %}
+
     <h1>{{ user.username }}</h1>
     <ul>
-        <li>Name: {{ user.name }}</li>
+        <li>Name: {{ user_profile.name }}</li>
         <li>Email: {{ user.email }}</li>
-        <li>Total Reviews: {{ user.profile.count_reviews }}</li>
+        <li>Total Reviews: {{ user_profile.count_reviews }}</li>
     </ul>
 {% endif %}
 </div>

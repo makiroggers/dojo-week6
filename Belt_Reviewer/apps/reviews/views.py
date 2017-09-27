@@ -37,16 +37,16 @@ def new_review(request):
 
 def view_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
-    return render(request, 'review_detail.html', {'review': review})
+    return render(request, 'reviews/review_detail.html', {'review': review})
 
 
-def view_book(request):
+def view_book(request, book_id):
     """
     Displays individual book details at reviews/books/<id> & allows user to add/delete a review for the given book
     Includes: title, author, reviews
     """
-    review = get_object_or_404(Book, pk=book_id)
-    return render(request, 'review_detail.html', {'book': book})
+    book = get_object_or_404(Book, pk=book_id)
+    return render(request, 'reviews/book_detail.html', {'book': book})
 
 
 def delete_review(request):

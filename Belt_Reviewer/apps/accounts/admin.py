@@ -9,7 +9,7 @@ from .models import UserProfile
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'name', 'email', 'count_reviews']
+    list_display = ['id', 'user_id', 'user', 'name', 'email', 'count_reviews']
     ordering = ['id',]
     list_filter = ('count_reviews', )
 
