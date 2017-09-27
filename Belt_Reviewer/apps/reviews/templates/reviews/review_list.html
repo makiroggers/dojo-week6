@@ -1,7 +1,7 @@
 {% extends 'templates/base.html' %} 
 {% load static %}
 
-{% block title %}<title>{{ user.name }}Reviews</title>{% endblock %}
+{% block title %}<title>{{ user.name }}All Reviews</title>{% endblock %}
 
 {% block menu_item %}
 {% if user.is_authenticated %}
@@ -13,13 +13,13 @@
 {% endif %}
 {% endblock %}
 
-
+<h1>All Reviews</h1>
 
 
 {% block content %}
 <div class="col-sm-10 profile">
     {% load django_tables2 %}
-    {% render_table ReviewsTable %}
+    {% render_table reviews_table %}
     <!-- <h1>{{ user.username }}</h1>
     <ul>
         <li>Name: {{ user.name }}</li>
