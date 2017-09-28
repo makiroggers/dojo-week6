@@ -11,10 +11,10 @@ import django_tables2 as tables
 
 users = User.objects.all()
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Alias', related_name='userprofile')
     name = models.CharField(max_length=100, blank=True)
-    # username = models.CharField(verbose_name='Alias', max_length=45)
     email = models.EmailField(max_length=100)
     count_reviews = models.IntegerField(verbose_name='Total Reviews', blank=True, null=True, default='0')
     created_at = models.DateTimeField(default=timezone.now)

@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from django import forms
 from django.forms import ModelForm, Textarea, TextInput, Select
-# from pagedown.widgets import PagedownWidget
 from .models import Review
 
 class ReviewForm(forms.ModelForm):
@@ -15,15 +14,13 @@ class ReviewForm(forms.ModelForm):
         (4, 4),
         (5, 5),
     ]
-    # # book = forms.CharField(max_length=250, label='Title of Book', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # rating = forms.ChoiceField(choices=RATING_CHOICES, required=False)
 
     class Meta:
         model = Review
         fields = ['book',
                   'author_add',
                   'rating',
-                  'review_text',]
+                  'review_text', ]
         labels = {
             'book': 'Title of Book',
             'author_add': 'Author of Book',

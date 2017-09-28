@@ -1,21 +1,5 @@
-"""Belt_Reviewer URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
-
-# FOR PROJECT
-from django.conf.urls import include, url
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literalsfrom django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import RedirectView
 
@@ -25,6 +9,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('apps.accounts.urls', namespace='accounts', app_name='apps.accounts')),
     url(r'^reviews/', include('apps.reviews.urls', namespace='reviews', app_name='apps.reviews')),
-    # url(r'^accounts/login/', login_view, name='login'),
     url(r'^$', RedirectView.as_view(url='/reviews/', permanent=False)),
 ]

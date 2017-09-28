@@ -18,5 +18,3 @@ class ReviewAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Review, ReviewAdmin)
-
-# Register your models here.

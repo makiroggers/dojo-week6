@@ -57,16 +57,3 @@ class Review(models.Model):
 
     def __str__(self):
         return self.book.title
-
-'''
-class Foo(models.Model):
-    bar = models.CharField(max_length=100)
-    ratings = GenericRelation(Rating, related_query_name='foos')
-
-    def get_average(self):
-        avg_rate = Rating.objects.get(foos=self.id).average
-        return avg_rate
-
-
-Foo.objects.filter(ratings__isnull=False).order_by('ratings__average')
-'''

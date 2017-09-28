@@ -84,15 +84,10 @@ def profile_view(request, user_id):
     """
     try:
         user_id = User.objects.get(pk=user_id)
-        # user_profile = UserProfile.objects.get(pk=pk)
         user_profile = UserProfile.objects.get(user_id=user_id)
-        print(user_profile)
-        print(user_profile.name)
-        # my_user = User.objects.get(username__iexact=user_id)
-        # print(UserProfile.objects.get(pk))
     except User.DoesNotExist:
         raise Http404("User does not exist.")
-    return render(request, 'user_profile.html', {'user': user_id, 'user_profile': user_profile,})
+    return render(request, 'user_profile.html', {'user': user_id, 'user_profile': user_profile, })
 
 
 @login_required

@@ -11,5 +11,4 @@ urlpatterns = [
     url(r'^users/profile/(?P<user_id>\d+)$', views.profile_view, name='profile'),
     url(r'^users/edit$', views.profile_update, name='update_profile'),
     url(r'^users/list$', views.profile_list, name='users_list')
-    # url(r'^success$', views.success, name='success'),
 ]
