@@ -72,10 +72,11 @@ def view_book(request, book_id):
         print(book_id)
         reviews = Review.objects.all()
         print(reviews)
+        review_form = ReviewForm(request.POST or None)
     except:
         print("Didn't work")
     # book = get_object_or_404(Book, pk=book_id)
-    return render(request, 'reviews/book_detail.html', {'book': book_id, 'review': reviews,})
+    return render(request, 'reviews/book_detail.html', {'book': book_id, 'review': reviews, 'form': review_form})
 
 
 def delete_review(request):
