@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.contenttypes.fields import GenericRelation
 import numpy as np
 
 
@@ -29,14 +30,16 @@ class Book(models.Model):
 
 class Review(models.Model):
     RATING_CHOICES = [
-        (1, '1'),
-        (2, '2'),
-        (3, '3'),
-        (4, '4'),
-        (5, '5'),
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
     ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    # Add author dropdown
+    author_add = models.CharField(max_length=100, verbose_name='Author of Book')
     review_text = models.TextField(max_length=1000)
     rating = models.IntegerField(choices=RATING_CHOICES)
     created_at = models.DateTimeField(verbose_name='Date Added', default=timezone.now)
@@ -54,3 +57,16 @@ class Review(models.Model):
 
     def __str__(self):
         return self.book.title
+
+'''
+class Foo(models.Model):
+    bar = models.CharField(max_length=100)
+    ratings = GenericRelation(Rating, related_query_name='foos')
+
+    def get_average(self):
+        avg_rate = Rating.objects.get(foos=self.id).average
+        return avg_rate
+
+
+Foo.objects.filter(ratings__isnull=False).order_by('ratings__average')
+'''

@@ -1,15 +1,15 @@
 {% extends 'templates/base.html' %} 
 {% load static %}
 
-{% block title %}<title>{{ user.name }}Reviews</title>{% endblock %}
+{% block title %}<title>List of All Books</title>{% endblock %}
 
 {% block menu_item %}
 {% if user.is_authenticated %}
-    <li><a href="{% url 'update_profile' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
-    <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    <li><a href="{% url 'accounts:update_profile' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+    <li><a href="{% url 'accounts:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 {% else %}
-    <li><a href="{% url 'accounts_index' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-    <li><a href="{% url 'accounts_index' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    <li><a href="{% url 'accounts:accounts_index' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+    <li><a href="{% url 'accounts:accounts_index' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 {% endif %}
 {% endblock %}
 
@@ -20,11 +20,5 @@
 <div class="col-sm-10 profile">
     {% load django_tables2 %}
     {% render_table table %}
-    <!-- <h1>{{ user.username }}</h1>
-    <ul>
-        <li>Name: {{ user.name }}</li>
-        <li>Email: {{ user.email }}</li>
-        <li>Total Reviews: {{ user.profile.count_reviews }}</li>
-    </ul> -->
 </div>
 {% endblock %}

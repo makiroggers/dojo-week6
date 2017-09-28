@@ -23,8 +23,8 @@ from apps.accounts.views import index, login_view, register_view, logout_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/', include('apps.accounts.urls'), name='accounts'),
-    url(r'^reviews/', include('apps.reviews.urls'), name='reviews'),
+    url(r'^accounts/', include('apps.accounts.urls', namespace='accounts', app_name='apps.accounts')),
+    url(r'^reviews/', include('apps.reviews.urls', namespace='reviews', app_name='apps.reviews')),
     # url(r'^accounts/login/', login_view, name='login'),
     url(r'^$', RedirectView.as_view(url='/reviews/', permanent=False)),
 ]

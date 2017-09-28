@@ -39,7 +39,7 @@ def register_view(request):
         user.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
-        return redirect('accounts_index')
+        return redirect('accounts:accounts_index')
     context = {'login_form': login_form,
                'registration_form': registration_form,
                'title': 'title', }
@@ -62,7 +62,7 @@ def login_view(request):
             login(request, return_user)
         except:
             raise Http404("This user does not exist.")
-        return redirect('accounts_index')
+        return redirect('accounts:accounts_index')
     context = {'login_form': login_form,
                'registration_form': registration_form,
                'title': title, }
@@ -74,18 +74,18 @@ def logout_view(request):
     Process user logout, redirects to login/reg page @ accounts/users/logout
     """
     logout(request)
-    return redirect('accounts_index')
+    return redirect('accounts:accounts_index')
 
 
-def profile_view(request, pk):
+def profile_view(request, user_id):
     """
     Render logged in user profile at /accounts/users/<id>
     Profile includes: Alias, name, email, total reviews, and list of reviews
     """
     try:
-        user_id = User.objects.get(pk=pk)
+        user_id = User.objects.get(pk=user_id)
         # user_profile = UserProfile.objects.get(pk=pk)
-        user_profile = UserProfile.objects.get(user_id=pk)
+        user_profile = UserProfile.objects.get(user_id=user_id)
         print(user_profile)
         print(user_profile.name)
         # my_user = User.objects.get(username__iexact=user_id)
@@ -106,7 +106,7 @@ def profile_update(request):
             profile_form.save()
             messages.success(request, (
                 'Your profile was successfully updated!'))
-            return redirect('update_profile')
+            return redirect('accounts:update_profile')
         else:
             messages.error(request, ('Please correct the error below.'))
     else:

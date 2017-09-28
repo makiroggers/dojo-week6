@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/belt_reviewer/styles.css' %}">
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     {% block css %} {% endblock %}
 </head>
 
@@ -38,9 +38,10 @@
             <div class="col-sm-2">
                 {% block sidebar %}
                 <ul class="sidebar-nav">
-                    <li><a href="">Home</a></li>
-                    <li><a href="{% url 'users_list' %}">All users</a></li>
-                    <li><a href="">All reviews</a></li>
+                    <li><a href="{% url 'accounts:accounts_index' %}">Home</a></li>
+                    <li><a href="{% url 'accounts:users_list' %}">All users</a></li>
+                    <li><a href="{% url 'reviews:review_list' %}">All reviews</a></li>
+                    <li><a href="{% url 'reviews:book_list' %}">All books</a></li>
                 </ul>
                 {% endblock %}
             </div>
