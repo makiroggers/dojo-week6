@@ -1,6 +1,17 @@
 {% extends 'templates/base.html' %} 
 {% load static %}
 
+{% block css %}
+<!-- <style>
+#book-detail-form > p > label:first-of-type {
+    display: none;
+}
+#id_book {
+    display: none;
+}
+</style> -->
+{% endblock %}
+
 {% block title %}<title>{{ book.title }} Reviews</title>{% endblock %}
 
 {% block menu_item %}
@@ -37,7 +48,7 @@
         <p><strong>{{ error_message }}</strong></p>
     {% endif %}
 
-    <form action="{% url 'reviews:add_review' %}" method="POST" class="form-group">
+    <form id="book-detail-form" action="{% url 'reviews:add_review' %}" method="POST" class="form-group">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="btn btn-default" value="Add">

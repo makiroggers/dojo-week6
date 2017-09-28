@@ -28,7 +28,7 @@ class ReviewForm(forms.ModelForm):
             'review_text': 'Your Review',
         }
         widgets = {
-            'book': forms.TextInput(attrs={'class': 'form-control'}),
+            'book': forms.TextInput(attrs={'class': 'form-control form-book-title',}),
             'author_add': forms.TextInput(attrs={'class': 'form-control'}),
             'review_text': forms.Textarea(attrs={'class': 'form-control'}),
             'rating': forms.Select(attrs={'class': 'form-control'}),
