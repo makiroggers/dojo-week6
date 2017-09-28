@@ -48,7 +48,7 @@
         <p><strong>{{ error_message }}</strong></p>
     {% endif %}
 
-    <form id="book-detail-form" action="{% url 'reviews:add_review' %}" method="POST" class="form-group">
+    <form id="book-detail-form" method="POST" class="form-group">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="btn btn-default" value="Add">

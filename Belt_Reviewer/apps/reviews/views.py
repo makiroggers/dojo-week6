@@ -7,7 +7,7 @@ from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django_tables2 import RequestConfig
 from .models import Book, Review
 from .tables import BooksTable, ReviewsTable
-from .forms import ReviewForm
+from .forms import ReviewForm, BookDetailForm
 
 
 def index(request):
@@ -66,18 +66,36 @@ def view_book(request, book_id):
     """
     Displays individual book details at reviews/books/<id> & allows user to add/delete a review for the given book
     Includes: title, author, reviews
+    
+    book = Book.objects.get(pk=book_id)
+    review_form = ReviewForm(request.POST)
+
+    if request.method == 'POST':
+        if review_form.is_valid():
+            review_form.save()
+            # messages.success(request, ('Your review was successfully posted!'))
+            return redirect('reviews:book_detail')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    else:
+        # review_form = ReviewForm(request.POST, instance=request.review)
+        review_form = ReviewForm(request.POST, instance=request.review)
+    return render(request, 'reviews/book_detail.html', {'book': book, 'review': reviews, 'form': review_form})
+
     """
     try:
-        book_id = Book.objects.get(pk=book_id)
-        print(book_id)
+        book = Book.objects.get(pk=book_id)
+        print(book.title)
         reviews = Review.objects.all()
         print(reviews)
-        review_form = ReviewForm(request.POST or None)
+        form = BookDetailForm(request.POST or None)
+        # review_form = ReviewForm(request.POST, initial={'book':book.title}, instance=book)
+        # review_form = ReviewForm(request.POST or None)
     except:
         print("Didn't work")
     # book = get_object_or_404(Book, pk=book_id)
-    return render(request, 'reviews/book_detail.html', {'book': book_id, 'review': reviews, 'form': review_form})
-
+    return render(request, 'reviews/book_detail.html', {'book': book, 'review': reviews, 'form': form})
+    
 
 def delete_review(request):
     """
