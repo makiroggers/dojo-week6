@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_tables2',
     'apps.accounts',
     'apps.reviews',
+    'django_extensions',
+    'django_filters',
 ]
 
 
