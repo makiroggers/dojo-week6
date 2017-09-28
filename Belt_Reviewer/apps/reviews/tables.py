@@ -11,7 +11,7 @@ class BooksTable(tables.Table):
 
     class Meta:
         model = Book
-        # name = tables.LinkColumn('title', args=[A('book_id')])
+        name = tables.LinkColumn('title', args=[A('book_id')])
         attrs = {'class': 'table table-striped table-hover'}
         exclude = ('id', 'created_at', 'updated_at')
 
