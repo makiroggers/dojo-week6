@@ -8,6 +8,8 @@ from django.urls import reverse
 from django.utils import timezone
 import datetime
 import django_tables2 as tables
+# from apps.reviews import models as reviews_models
+# from ..reviews.models import Book
 
 users = User.objects.all()
 

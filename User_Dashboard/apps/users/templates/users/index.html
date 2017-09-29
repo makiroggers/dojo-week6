@@ -1,0 +1,41 @@
+{% extends 'templates/base.html' %}
+{% load static %}
+
+{% block title %}<title>{{ title }}</title>{% endblock %}
+
+{% block menu_item %}
+{% if user.is_authenticated %}
+    <li><a href="{% url 'users:user_edit_user' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+    <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+{% else %}
+    <li><a href="{% url 'users:index' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+    <li><a href="{% url 'users:index' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Hello {{ user.username }}!</h1>
+    {% else %}
+    <div class="col-sm-5 register">
+        <h1>Register</h1>
+        <form method="POST" id="register-form" action="{% url 'users:register' %}" class="form-horizontal" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ registration_form.as_p }}
+        <input type="submit" class="btn btn-default" value="Register">
+        </form>
+    </div>
+
+
+    <div class="col-sm-5 login">
+        <h1>Login</h1>
+        <form method="POST" id="login-form" action="{% url 'users:login' %}" class="form-horizontal" enctype="multipart/form-data">
+            {% csrf_token %} 
+            {{ login_form.as_p }}
+            <input type="submit" class="btn btn-default" value="Login">
+        </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
+<!-- {% block scripts %}<script src="{% static 'scripts/accounts/scripts.js' %}"></script>{% endblock %} -->

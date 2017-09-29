@@ -42,7 +42,7 @@ def register_view(request):
         return redirect('accounts:accounts_index')
     context = {'login_form': login_form,
                'registration_form': registration_form,
-               'title': 'title', }
+               'title': title, }
     return render(request, 'form.html', context=context)
 
 
