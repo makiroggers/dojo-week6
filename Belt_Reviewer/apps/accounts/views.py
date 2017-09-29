@@ -13,7 +13,7 @@ from .tables import *
 
 def index(request):
     """
-    Renders registration and login forms @ /accounts/index
+    Renders registration and login forms 
     """
     title = 'Login/Registration'
     login_form = UserLoginForm()
@@ -26,7 +26,7 @@ def index(request):
 
 def register_view(request):
     """
-    Process post data to register a new account @ /accounts/users/new
+    Process post data to register a new account 
     Registration includes fields: name, alias, email, 8-char password, password confirmation
     """
     title = 'Login/Registration'
@@ -48,7 +48,7 @@ def register_view(request):
 
 def login_view(request):
     """
-    Process user login @ /accounts/users/login
+    Process user login 
     Login includes fields: Email, password
     """
     title = 'Login/Registration'
@@ -71,52 +71,52 @@ def login_view(request):
 
 def logout_view(request):
     """
-    Process user logout, redirects to login/reg page @ accounts/users/logout
+    Process user logout, redirects to login/reg page 
     """
     logout(request)
     return redirect('accounts:accounts_index')
 
 
-def profile_view(request, user_id):
-    """
-    Render logged in user profile at /accounts/users/<id>
-    Profile includes: Alias, name, email, total reviews, and list of reviews
-    """
-    try:
-        user_id = User.objects.get(pk=user_id)
-        user_profile = UserProfile.objects.get(user_id=user_id)
-    except User.DoesNotExist:
-        raise Http404("User does not exist.")
-    return render(request, 'user_profile.html', {'user': user_id, 'user_profile': user_profile, })
+# def profile_view(request, user_id):
+#     """
+#     Render logged in user profile at /accounts/users/<id>
+#     Profile includes: Alias, name, email, total reviews, and list of reviews
+#     """
+#     try:
+#         user_id = User.objects.get(pk=user_id)
+#         user_profile = UserProfile.objects.get(user_id=user_id)
+#     except User.DoesNotExist:
+#         raise Http404("User does not exist.")
+#     return render(request, 'user_profile.html', {'user': user_id, 'user_profile': user_profile, })
 
 
-@login_required
-@transaction.atomic
-def profile_update(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.userprofile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, (
-                'Your profile was successfully updated!'))
-            return redirect('accounts:update_profile')
-        else:
-            messages.error(request, ('Please correct the error below.'))
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.userprofile)
-    return render(request, 'user_edit.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+# @login_required
+# @transaction.atomic
+# def profile_update(request):
+#     if request.method == 'POST':
+#         user_form = UserForm(request.POST, instance=request.user)
+#         profile_form = ProfileForm(request.POST, instance=request.user.userprofile)
+#         if user_form.is_valid() and profile_form.is_valid():
+#             user_form.save()
+#             profile_form.save()
+#             messages.success(request, (
+#                 'Your profile was successfully updated!'))
+#             return redirect('accounts:update_profile')
+#         else:
+#             messages.error(request, ('Please correct the error below.'))
+#     else:
+#         user_form = UserForm(instance=request.user)
+#         profile_form = ProfileForm(instance=request.user.userprofile)
+#     return render(request, 'user_edit.html', {
+#         'user_form': user_form,
+#         'profile_form': profile_form
+#     })
 
-def profile_list(request):
-    '''
-    queryset = UserProfile.objects.all()
-    table = SimpleTable(queryset)
-    '''
-    table = UserProfileTable(UserProfile.objects.all())
-    RequestConfig(request).configure(table)
-    return render(request, 'user_list.html', {'table': table})
+# def profile_list(request):
+#     '''
+#     queryset = UserProfile.objects.all()
+#     table = SimpleTable(queryset)
+#     '''
+#     table = UserProfileTable(UserProfile.objects.all())
+#     RequestConfig(request).configure(table)
+#     return render(request, 'user_list.html', {'table': table})
