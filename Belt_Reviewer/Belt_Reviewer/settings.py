@@ -135,6 +135,7 @@ STATICFILES_DIR = [
     os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "apps/accounts/static/"),
     os.path.join(BASE_DIR, "apps/reviews/static/"),
+    os.path.join(BASE_DIR, "apps/travels/static/"),
     os.path.join(BASE_DIR, "Belt_Reviewer/static/")
 ]
 

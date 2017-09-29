@@ -39,7 +39,7 @@ def register_view(request):
         user.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
-        return redirect('accounts:accounts_index')
+        return redirect('users:accounts_index')
     context = {'login_form': login_form,
                'registration_form': registration_form,
                'title': title, }
@@ -62,7 +62,7 @@ def login_view(request):
             login(request, return_user)
         except:
             raise Http404("This user does not exist.")
-        return redirect('accounts:accounts_index')
+        return redirect('users:accounts_index')
     context = {'login_form': login_form,
                'registration_form': registration_form,
                'title': title, }
@@ -74,49 +74,4 @@ def logout_view(request):
     Process user logout, redirects to login/reg page 
     """
     logout(request)
-    return redirect('accounts:accounts_index')
-
-
-# def profile_view(request, user_id):
-#     """
-#     Render logged in user profile at /accounts/users/<id>
-#     Profile includes: Alias, name, email, total reviews, and list of reviews
-#     """
-#     try:
-#         user_id = User.objects.get(pk=user_id)
-#         user_profile = UserProfile.objects.get(user_id=user_id)
-#     except User.DoesNotExist:
-#         raise Http404("User does not exist.")
-#     return render(request, 'user_profile.html', {'user': user_id, 'user_profile': user_profile, })
-
-
-# @login_required
-# @transaction.atomic
-# def profile_update(request):
-#     if request.method == 'POST':
-#         user_form = UserForm(request.POST, instance=request.user)
-#         profile_form = ProfileForm(request.POST, instance=request.user.userprofile)
-#         if user_form.is_valid() and profile_form.is_valid():
-#             user_form.save()
-#             profile_form.save()
-#             messages.success(request, (
-#                 'Your profile was successfully updated!'))
-#             return redirect('accounts:update_profile')
-#         else:
-#             messages.error(request, ('Please correct the error below.'))
-#     else:
-#         user_form = UserForm(instance=request.user)
-#         profile_form = ProfileForm(instance=request.user.userprofile)
-#     return render(request, 'user_edit.html', {
-#         'user_form': user_form,
-#         'profile_form': profile_form
-#     })
-
-# def profile_list(request):
-#     '''
-#     queryset = UserProfile.objects.all()
-#     table = SimpleTable(queryset)
-#     '''
-#     table = UserProfileTable(UserProfile.objects.all())
-#     RequestConfig(request).configure(table)
-#     return render(request, 'user_list.html', {'table': table})
+    return redirect('users:accounts_index')

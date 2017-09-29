@@ -21,14 +21,22 @@
                     aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
                     </button>
-                <a class="navbar-brand" href="">Book Review Site</a>
+                <a class="navbar-brand" href="">My Travel Site</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="">Home</a></li>
                     
                 </ul>
-                <ul class="nav navbar-nav navbar-right">{% block menu_item %} {% endblock %}</ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'travels:travel_index' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+                        <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'users:accounts_index' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="{% url 'users:accounts_index' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
@@ -38,10 +46,10 @@
             <div class="col-sm-2">
                 {% block sidebar %}
                 <ul class="sidebar-nav">
-                    <li><a href="{% url 'accounts:accounts_index' %}">Home</a></li>
-                    <li><a href="{% url 'accounts:users_list' %}">All users</a></li>
+                    <li><a href="{% url 'users:accounts_index' %}">Home</a></li>
+                    <!-- <li><a href="{% url 'users:users_list' %}">All users</a></li>
                     <li><a href="{% url 'reviews:review_list' %}">All reviews</a></li>
-                    <li><a href="{% url 'reviews:book_list' %}">All books</a></li>
+                    <li><a href="{% url 'reviews:book_list' %}">All books</a></li> -->
                 </ul>
                 {% endblock %}
             </div>

@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericRelation
 
+import django_tables2 as tables
+
 '''
 class MyModelName(models.Model):
     """

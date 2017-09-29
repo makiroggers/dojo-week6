@@ -5,16 +5,6 @@
 
 {% block css %}{% endblock %}
 
-{% block menu_item %}
-{% if user.is_authenticated %}
-    <li><a href="{% url 'accounts:update_profile' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
-    <li><a href="{% url 'accounts:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-{% else %}
-    <li><a href="{% url 'accounts:accounts_index' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-    <li><a href="{% url 'accounts:accounts_index' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-{% endif %}
-{% endblock %}
-
 {% block content %}
 
     {% if user.is_authenticated %}

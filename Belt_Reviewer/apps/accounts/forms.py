@@ -61,22 +61,22 @@ class UserRegisterForm(forms.ModelForm):
         return super(UserRegisterForm, self).clean(*args, **kwargs)
 
 
-class UserForm(forms.ModelForm):
-    username = forms.CharField(label='Alias', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+# class UserForm(forms.ModelForm):
+#     username = forms.CharField(label='Alias', widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
 
-    class Meta:
-        model = User
-        fields = [
-            'username',
-            'email',
-        ]
+#     class Meta:
+#         model = User
+#         fields = [
+#             'username',
+#             'email',
+#         ]
 
 
-class ProfileForm(forms.ModelForm):
-    name = forms.CharField(label='Name', max_length=100, widget=forms.TextInput(
-        attrs={'class': 'form-control'}))
+# class ProfileForm(forms.ModelForm):
+#     name = forms.CharField(label='Name', max_length=100, widget=forms.TextInput(
+#         attrs={'class': 'form-control'}))
 
-    class Meta:
-        model = UserProfile
-        fields = ['name', ]
+#     class Meta:
+#         model = UserProfile
+#         fields = ['name', ]
