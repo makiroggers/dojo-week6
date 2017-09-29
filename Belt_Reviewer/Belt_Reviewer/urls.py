@@ -9,6 +9,7 @@ from apps.accounts.views import index, login_view, register_view, logout_view
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^users/', include('apps.accounts.urls', namespace='users', app_name='apps.accounts')),
+    url(r'^reviews/', RedirectView.as_view(url='/users/', permanent=False)),
     # url(r'^reviews/', include('apps.reviews.urls', namespace='reviews', app_name='apps.reviews')),
     url(r'^travels/', include('apps.travels.urls', namespace='travels', app_name='apps.travels')),
     url(r'^$', RedirectView.as_view(url='/travels/', permanent=False)),
