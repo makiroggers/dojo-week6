@@ -43,14 +43,14 @@ class Trip(models.Model):
     """
     destination = models.CharField(max_length=200)
     plans = models.CharField(max_length=200)
-    travel_from = models.DateTimeField(verbose_name='Departure Date', blank=True, null=True)
-    travel_to = models.DateTimeField(verbose_name='Arrival Date', blank=True, null=True)
-    travelers = models.ManyToManyField('Traveler', through='Trip_Travelers', blank=True)
-    created_at = models.DateTimeField(verbose_name='Date Added', default=timezone.now)
-    updated_at = models.DateTimeField(verbose_name='Last Updated', blank=True, null=True, auto_now=True)
+    travel_from = models.DateTimeField(verbose_name='Departure Date')
+    travel_to = models.DateTimeField(verbose_name='Arrival Date')
+    travelers = models.ManyToManyField('Traveler', through='Trip_Travelers', null=True, blank=True)
+    created_at = models.DateField(verbose_name='Date Added', default=timezone.now)
+    updated_at = models.DateField(verbose_name='Last Updated', blank=True, null=True, auto_now=True)
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["created_at"]
 
     def get_absolute_url(self):
          """Returns the url to access a particular instance of a Trip."""
@@ -70,11 +70,11 @@ class Traveler(models.Model):
     updated_at = models.DateTimeField(verbose_name='Last Updated', blank=True, null=True, auto_now=True)
 
     class Meta:
-        ordering = ["-user"]
+        ordering = ["user"]
 
-    def __str__(self):
-        """String representing the Traveler object."""
-        return self.user.name
+    # def __str__(self):
+    #     """String representing the Traveler object."""
+    #     return self.user
 
 
 class Trip_Travelers(models.Model):
@@ -85,4 +85,4 @@ class Trip_Travelers(models.Model):
     traveler = models.ForeignKey('Traveler')
 
     class Meta:
-        ordering = ["-trip"]
+        ordering = ["trip"]

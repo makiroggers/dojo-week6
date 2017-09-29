@@ -16,5 +16,5 @@ class ReviewAdmin(admin.ModelAdmin):
     list_filer = ['updated_at', 'user']
     search_fields = ['review_text']
 
-admin.site.register(Book, BookAdmin)
-admin.site.register(Review, ReviewAdmin)
+# admin.site.register(Book, BookAdmin)
+# admin.site.register(Review, ReviewAdmin)

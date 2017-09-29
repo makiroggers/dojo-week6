@@ -1,0 +1,26 @@
+{% extends 'templates/base.html' %}
+{% load static %}
+
+{% block title %}<title>{{ title }}</title>{% endblock %}
+
+{% block css %}{% endblock %}
+
+{% block content %}
+    <div class="col-sm-10 profile"></div>
+        {% if user.is_authenticated %}
+        <h2>Hello, {{ user.username }}!</h2>
+        
+            {% load django_tables2 %}
+            <h3>Your Trip Schedule</h3>
+             {% render_table my_travel_table %}
+
+            <h4>Other Users' Travel Plans</h4>
+            {% render_table all_travel_table %}
+        <a href="{% url 'travels:add_trip' %}" class="btn btn-default">Add Travel Plan</a>
+        {% else %}
+            <h1>Go away and <a href="{% url 'users:accounts_index' %}">login</a> first!</h1>>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}{% endblock %}

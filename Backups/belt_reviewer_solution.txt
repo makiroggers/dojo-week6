@@ -1,0 +1,392 @@
+LOGIN MODELS.PY
+================
+
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import re
+import bcrypt
+from django.db import models
+
+EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9\.\+_-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]*$')
+NAME_REGEX = re.compile(r'^[A-Za-z]\w+$')
+
+class UserManager(models.Manager):
+    def validate_login(self, post_data):
+        errors = []
+        # check DB for post_data['email']
+        if len(self.filter(email=post_data['email'])) > 0:
+            # check this user's password
+            user = self.filter(email=post_data['email'])[0]
+            if not bcrypt.checkpw(post_data['password'].encode(), user.password.encode()):
+                errors.append('email/password incorrect')
+        else:
+            errors.append('email/password incorrect')
+
+        if errors:
+            return errors
+        return user
+
+    # def books_reviewed(self):
+    #     return self.model.reviews_left.all().values('book').distict()
+
+    def validate_registration(self, post_data):
+        errors = []
+        # check length of name fields
+        if len(post_data['name']) < 2 or len(post_data['alias']) < 2:
+            errors.append("name fields must be at least 3 characters")
+        # check length of name password
+        if len(post_data['password']) < 8:
+            errors.append("password must be at least 8 characters")
+        # check name fields for letter characters            
+        if not re.match(NAME_REGEX, post_data['name']):
+            errors.append('name fields must be letter characters only')
+        # check emailness of email
+        if not re.match(EMAIL_REGEX, post_data['email']):
+            errors.append("invalid email")
+        # check uniqueness of email
+        if len(User.objects.filter(email=post_data['email'])) > 0:
+            errors.append("email already in nameuse")
+        # check password == password_confirm
+        if post_data['password'] != post_data['password_confirm']:
+            errors.append("passwords do not match")
+
+        if not errors:
+            # make our new user
+            # hash password
+            hashed = bcrypt.hashpw((post_data['password'].encode()), bcrypt.gensalt(5))
+
+            new_user = self.create(
+                name=post_data['name'],
+                alias=post_data['alias'],
+                email=post_data['email'],
+                password=hashed
+            )
+            return new_user
+        return errors
+
+
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    alias = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+    objects = UserManager()
+    def __str__(self):
+        return self.email
+
+
+
+LOGIN TEMPLATES INDEX.HTML
+=====================
+
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load staticfiles %}
+        <link href="{% static 'login/style.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <h1>Welcome</h1>
+        <h2>Registration</h2>
+        <form action="/register" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name">
+            </div>
+            <div class="form-group">
+                <label for="alias">Alias</label>
+                <input type="text" name="alias">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password">
+            </div>
+            <div class="form-group">
+                <label for="password_confirm">Confirm Password</label>
+                <input type="password" name="password_confirm">
+            </div>
+            <input type="submit" value='Register'>
+        </form>
+        <h2>Login</h2>
+        <form action="{% url 'login:do_the_login' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password">
+            </div>
+            <input type="submit" value='Login'>
+        </form>
+    </body>
+</html>
+
+
+===================
+TEMPLATES SHOW.HTML
+===================
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load staticfiles %}
+        <link href="{% static 'login/style.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <p><a href="/books">Home</a> | <a href="{% url 'review:add' %}">Add book and review</a> | <a href="/logout">Logout</a></p>
+        <h1><strong>User Alias: </strong>{{user.alias}}</h1>
+        <h2><strong>Name: </strong> {{user.name}}</h2> 
+        <h2><strong>Email: </strong> {{user.email}}</h2> 
+        <h2><strong>Total Reviews: </strong> {{user.reviews_left.all.count}}</h2>
+        <hr>
+        <h1>Posted Reviews on the Folowing Books</h1>
+        {% for book in unique_book_reviews %}
+        <h3><a href="/books/{{book.id}}">{{book.title}}</a></h3>
+        {% endfor %}
+    </body>
+</html>
+
+
+
+===============
+LOGIN TEMPLATES: SUCCESS.HTML
+================
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <h1>Success! Welcome, {{ user.first_name }}</h1>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </body>
+</html>
+
+
+===============
+LOGIN VIEWS.PY
+===============
+
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from .models import User
+from ..review.models import Book
+from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
+from django.contrib import messages
+
+# Create your views here.
+def index(request):
+    return render(request, 'login/index.html')
+
+def register(request):
+    result = User.objects.validate_registration(request.POST)
+    if type(result) == list:
+        for err in result:
+            messages.error(request, err)
+        return redirect('/')
+    request.session['user_id'] = result.id
+    messages.success(request, "Successfully registered!")
+    return HttpResponseRedirect(reverse("review:index"))
+
+def login(request):
+    result = User.objects.validate_login(request.POST)
+    if type(result) == list:
+        for err in result:
+            messages.error(request, err)
+        return redirect('/')
+    request.session['user_id'] = result.id
+    messages.success(request, "Successfully logged in!")
+    return HttpResponseRedirect(reverse("review:index"))
+
+def logout(request):
+    for key in request.session.keys():
+        del request.session[key]
+    return redirect('/')
+
+def success(request):
+    try:
+        request.session['user_id']
+    except KeyError:
+        return redirect('/')
+    context = {
+        'user': User.objects.get(id=request.session['user_id'])
+    }
+    return render(request, 'login/success.html', context)
+
+def show(request, user_id):
+    user = User.objects.get(id=user_id)
+    unique_ids = user.reviews_left.all().values("book").distinct()
+    unique_books = []
+    for book in unique_ids:
+        unique_books.append(Book.objects.get(id=book['book']))
+    context = {
+        'user': user,
+        'unique_book_reviews': unique_books
+    }
+    return render(request, 'login/show.html', context)
+
+
+================
+REVIEW MODELS.PY
+================
+
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from ..login.models import User
+from django.db import models
+
+
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+
+class Book(models.Model):
+    title = models.CharField(max_length=100)
+    author = models.ForeignKey(Author, related_name="books")
+    def __str__(self):
+        return self.title
+
+class ReviewManager(models.Manager):
+    def validate_review(self, post_data):
+        errors = []
+
+        if len(post_data['title']) < 1 or len(post_data['review']) < 1:
+            errors.append('fields are required')
+        if not "author" in post_data and len(post_data['new_author']) < 3:
+            errors.append('new author names must 3 or more characters')
+
+        if "author" in post_data and len(post_data['new_author']) > 0 and len(post_data['new_author']) < 3:
+            errors.append('new author names must 3 or more characters')
+        if not int(post_data['rating']) > 0 or not int(post_data['rating']) <= 5:
+            errors.append('invalid rating')
+        return errors
+
+    def create_review(self, clean_data, user_id):
+        # retrive or create author
+        the_author = None
+        if len(clean_data['new_author']) < 1:
+            the_author = Author.objects.get(id=int(clean_data['author']))
+        else:
+            the_author = Author.objects.create(name=clean_data['new_author'])
+        # retirive or create book
+        the_book = None
+        if not Book.objects.filter(title=clean_data['title']):
+            the_book = Book.objects.create(
+                title=clean_data['title'], author=the_author
+            )
+        else:
+            the_book = Book.objects.get(title=clean_data['title'])
+        # returns a Review object
+        return self.create(
+            review = clean_data['review'],
+            rating = clean_data['rating'],
+            book = the_book,
+            reviewer = User.objects.get(id=user_id)
+        )
+
+    def recent_and_not(self):
+        '''
+        returns a tuple with the zeroeth index containing query for 3 most recent reviews, and the first index
+        containing the rest
+        '''
+        return (self.all().order_by('-created_at')[:3], self.all().order_by('-created_at')[3:])
+
+class Review(models.Model):
+    review = models.TextField()
+    rating = models.IntegerField()
+    book = models.ForeignKey(Book, related_name="reviews")
+    reviewer = models.ForeignKey(User, related_name="reviews_left")
+    created_at = models.DateTimeField(auto_now_add=True)
+    objects = ReviewManager()
+    def __str__(self):
+        return "Book: {}".format(self.book.title)
+
+
+
+
+===============
+REVIEW VIEWS.PY
+===============
+
+
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from .models import Review, Author, Book
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+# Create your views here.
+def index(request):
+    context = {
+        'recent': Review.objects.recent_and_not()[0],
+        'more': Review.objects.recent_and_not()[1]
+    }
+    return render(request, 'review/index.html', context)
+
+def add(request):
+    context = {
+        "authors": Author.objects.all()
+    }
+    return render(request, 'review/add.html', context)
+
+def show(request, book_id):
+    context = {
+        'book': Book.objects.get(id=book_id)
+    }
+    return render(request, 'review/show.html', context)
+
+def create(request):
+    errs = Review.objects.validate_review(request.POST)
+    if errs:
+        for e in errs:
+            messages.error(request, e)
+    else:
+        book_id = Review.objects.create_review(request.POST, request.session['user_id']).book.id
+    return redirect('/books/{}'.format(book_id))
+
+def create_additional(request, book_id):
+    the_book = Book.objects.get(id=book_id)
+    new_book_data = {
+        'title': the_book.title,
+        'author': the_book.author.id,
+        'rating': request.POST['rating'],
+        'review': request.POST['review'],
+        'new_author': ''
+    }
+    errs = Review.objects.validate_review(new_book_data)
+    if errs:
+        for e in errs:
+            messages.error(request, e)
+    else:
+        Review.objects.create_review(new_book_data, request.session['user_id'])
+    return redirect('/books/' + book_id)

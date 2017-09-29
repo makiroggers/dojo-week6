@@ -6,15 +6,30 @@ from django_tables2 import A
 from .models import *
 
 
-class TripsTable(tables.Table):
-    title = tables.LinkColumn('travels:trip_detail',
-                              text=lambda record: record.title, args=[A('pk')])
+class MyTripsTable(tables.Table):
+    destination = tables.LinkColumn('travels:trip_detail',
+                                    text=lambda record: record.destination, args=[A('pk')])
 
     class Meta:
         model = Trip
         name = tables.LinkColumn('destination', args=[A('trip_id')])
         attrs = {'class': 'table table-striped table-hover'}
-        exclude = ('id', 'created_at', 'updated_at')
+        exclude = ('created_at', 'updated_at')
+        sequence = ('id', 'destination', 'travel_from', 'travel_to', '...')
+
+class AllTripsTable(tables.Table):
+    destination = tables.LinkColumn('travels:trip_detail',
+                              text=lambda record: record.destination, args=[A('pk')])
+    join_trip = tables.TemplateColumn('<a href="URL_TO_JOIN_TRIP">Join</a>')
+
+
+    class Meta:
+        model = Trip
+        name = tables.LinkColumn('destination', args=[A('trip_id')])
+        attrs = {'class': 'table table-striped table-hover'}
+        exclude = ('created_at', 'updated_at')
+        sequence = ('id', 'destination', 'travel_from', 'travel_to', '...')
+
 
 
 # class ReviewsTable(tables.Table):

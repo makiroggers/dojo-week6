@@ -1,0 +1,40 @@
+{% extends 'templates/base.html' %}
+{% load static %}
+
+{% block title %}<title>{{ title }}</title>{% endblock %}
+
+{% block css %}
+<style>
+    h4, h5, h6 {
+        display: inline-block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+        <div class="col-sm-8">
+            <h2>{{ trip.destination }}</h2>
+            
+            <p><h5>Planned By:</h5> {{ first_traveler }}</p>
+            <p><h5>Description:</h5> {{ trip.plans }}</p>
+            <p><h5>Travel Date From:</h5> {{ trip.travel_from }}</p>
+            <p><h5>Travel Date To:</h5> {{ trip.travel_to }}</p>
+
+            <p>
+                <h3>Other Users Joining the Trip</h3>
+                {% for each in other_travelers %}
+                    <p><h5>{{ each }}</h5></p>
+                {% endfor %}
+            </p>
+        </div>
+    {% else %}
+        <div class="col-sm-5">
+            <h5>Click link above to login.</h5>
+        </div>
+    {% endif %}
+        
+{% endblock %}
+
+{% block scripts %}{% endblock %}
